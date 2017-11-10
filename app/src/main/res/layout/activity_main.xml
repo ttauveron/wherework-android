@@ -4,91 +4,64 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
     tools:context="com.log515.lambda.wherework.MainActivity">
 
     <TextView
         android:id="@+id/LbTop"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="36dp"
         android:text="Find empty classrooms in"
-        android:textSize="18sp"
-        tools:layout_editor_absoluteX="86dp"
-        tools:layout_editor_absoluteY="16dp" />
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/LbSchoolName"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/LbTop"
-        android:layout_centerHorizontal="true"
-        android:text="École de Technologie Supérieure"
-        android:textSize="24sp"
-        tools:layout_editor_absoluteX="20dp"
-        tools:layout_editor_absoluteY="41dp" />
+        android:layout_below="@id/LbTop"
+        android:layout_marginBottom="10dp"
+        android:text="École de technologie supérieure"
+        android:textSize="24sp" />
 
-    <TextView
-        android:id="@+id/LbInfo"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/date_text_input_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/LbSchoolName"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="Select the date and other options"
-        android:textSize="18sp"
-        tools:layout_editor_absoluteX="86dp"
-        tools:layout_editor_absoluteY="16dp" />
+        android:layout_below="@id/LbSchoolName"
+        android:hint="Date">
 
-    <TextView
-        android:id="@+id/TvDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/LbInfo"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="26dp"
-        android:hint="Select Date"
-        android:textSize="30sp" />
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/date_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            tools:text="10/11/2017" />
+    </android.support.design.widget.TextInputLayout>
 
-    <Spinner
-        android:id="@+id/SpDayTime"
-        android:layout_width="450px"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/TvDate"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="27dp"
-        android:textSize="30sp" />
-
-    <Spinner
+    <fr.ganfra.materialspinner.MaterialSpinner
         android:id="@+id/SpBuilding"
-        android:layout_width="250px"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/SpDayTime"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="13dp"
-        android:textSize="30sp" />
+        android:layout_below="@id/date_text_input_layout"
+        android:entries="@array/BuildingArray"
+        app:ms_hint="Pavillon"
+        app:ms_hintColor="?android:textColorHint" />
 
-    <Spinner
+    <fr.ganfra.materialspinner.MaterialSpinner
         android:id="@+id/SpFloor"
-        android:layout_width="250px"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/SpBuilding"
-        android:layout_below="@+id/SpBuilding"
-        android:layout_marginTop="16dp"
-        android:textSize="30sp" />
+        android:layout_below="@id/SpBuilding"
+        android:entries="@array/AFloorArray"
+        app:ms_hint="Étage"
+        app:ms_hintColor="?android:textColorHint" />
 
     <Button
-        android:id="@+id/button_search"
+        android:id="@+id/search_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/SpFloor"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:layout_marginTop="24dp"
-        android:text="Find Empty Classroom"
-        tools:layout_editor_absoluteX="97dp"
-        tools:layout_editor_absoluteY="338dp" />
-
-
-
+        android:text="Trouver un local vide" />
 </RelativeLayout>

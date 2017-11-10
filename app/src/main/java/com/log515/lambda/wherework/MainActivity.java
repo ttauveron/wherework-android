@@ -3,68 +3,57 @@ package com.log515.lambda.wherework;
 import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity{
 
     private static final String TAG = "MainActivity";
 
-    private TextView mDisplayDate;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private TextView.OnClickListener mDateClickListener;
 
-    private Spinner mDayTime;
+    private EditText dateEt;
     private Spinner mBuilding;
     private Spinner mFloor;
+    private Button serachBtn;
     private Spinner.OnItemSelectedListener mDayTimeItemSelected;
     private Spinner.OnItemSelectedListener mBuildingItemSelected;
     private Spinner.OnItemSelectedListener mFloorItemSelected;
-    private ArrayAdapter<CharSequence> BuildingAdapter;
-    private ArrayAdapter<CharSequence> DayTimeAdapter;
     private ArrayAdapter<CharSequence> AFloorAdapter;
     private ArrayAdapter<CharSequence> BFloorAdapter;
     private ArrayAdapter<CharSequence> EFloorAdapter;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDisplayDate = findViewById(R.id.TvDate);
-        mDayTime = findViewById(R.id.SpDayTime);
+        dateEt = findViewById(R.id.date_edit_text);
         mBuilding = findViewById(R.id.SpBuilding);
         mFloor = findViewById(R.id.SpFloor);
+        serachBtn = findViewById(R.id.search_button);
 
-        CreateAdaptersAndEvents();
+        createAdaptersAndEvents();
 
-        // Set the default value to today
-        Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        mDisplayDate.setText(FormatDate(day, month, year));
-        mDisplayDate.setOnClickListener(mDateClickListener);
+        dateEt.setOnClickListener(mDateClickListener);
+        DateFormat dateFormat = SimpleDateFormat.getDateInstance();
+        dateEt.setText(dateFormat.format(new Date()));
 
-        mDayTime.setAdapter(DayTimeAdapter);
-        mDayTime.setOnItemSelectedListener(mDayTimeItemSelected);
-
-        mBuilding.setAdapter(BuildingAdapter);
         mBuilding.setOnItemSelectedListener(mBuildingItemSelected);
 
         mFloor.setAdapter(AFloorAdapter);
@@ -72,15 +61,18 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-    private void CreateAdaptersAndEvents() {
+    private void createAdaptersAndEvents() {
 
         mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1; // January is 0
-                String date = FormatDate(day, month, year);
-                mDisplayDate.setText(date);
-                Log.d(TAG, "Date Set : dd/mm/yyyy: " + date);
+                Calendar cal = Calendar.getInstance();
+                cal.set(year, month, day);
+                Date date = cal.getTime();
+                DateFormat dateFormat = SimpleDateFormat.getDateInstance();
+                String dateStr = dateFormat.format(date);
+                dateEt.setText(dateStr);
             }
         };
 
@@ -102,12 +94,6 @@ public class MainActivity extends AppCompatActivity{
             }
         };
 
-
-        DayTimeAdapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.DayTimeArray,
-                android.R.layout.simple_spinner_item);
-        DayTimeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         mDayTimeItemSelected = new Spinner.OnItemSelectedListener() {
             @Override
@@ -149,13 +135,6 @@ public class MainActivity extends AppCompatActivity{
             public void onNothingSelected(AdapterView<?> adapterView) {}
         };
 
-
-        BuildingAdapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.BuildingArray,
-                android.R.layout.simple_spinner_item);
-        BuildingAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         mBuildingItemSelected = new Spinner.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
@@ -175,9 +154,5 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {}
         };
-    }
-
-    private String FormatDate(int day, int month, int year) {
-        return day + "/" + month + "/" + year;
     }
 }
