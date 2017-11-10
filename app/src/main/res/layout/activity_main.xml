@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,20 +7,88 @@
     tools:context="com.log515.lambda.wherework.MainActivity">
 
     <TextView
+        android:id="@+id/LbTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
+        android:text="Find empty classrooms in"
+        android:textSize="18sp"
+        tools:layout_editor_absoluteX="86dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/LbSchoolName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/LbTop"
+        android:layout_centerHorizontal="true"
+        android:text="École de Technologie Supérieure"
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="20dp"
+        tools:layout_editor_absoluteY="41dp" />
+
+    <TextView
+        android:id="@+id/LbInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/LbSchoolName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Select the date and other options"
+        android:textSize="18sp"
+        tools:layout_editor_absoluteX="86dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/TvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/LbInfo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="26dp"
+        android:hint="Select Date"
+        android:textSize="30sp" />
+
+    <Spinner
+        android:id="@+id/SpDayTime"
+        android:layout_width="450px"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/TvDate"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="27dp"
+        android:textSize="30sp" />
+
+    <Spinner
+        android:id="@+id/SpBuilding"
+        android:layout_width="250px"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/SpDayTime"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="13dp"
+        android:textSize="30sp" />
+
+    <Spinner
+        android:id="@+id/SpFloor"
+        android:layout_width="250px"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/SpBuilding"
+        android:layout_below="@+id/SpBuilding"
+        android:layout_marginTop="16dp"
+        android:textSize="30sp" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/button_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Connexion"
-        tools:layout_editor_absoluteX="141dp"
-        tools:layout_editor_absoluteY="377dp" />
+        android:layout_below="@+id/SpFloor"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:text="Find Empty Classroom"
+        tools:layout_editor_absoluteX="97dp"
+        tools:layout_editor_absoluteY="338dp" />
 
-</android.support.constraint.ConstraintLayout>
+
+
+</RelativeLayout>
