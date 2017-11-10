@@ -1,6 +1,7 @@
 package com.log515.lambda.wherework;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -13,7 +14,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.TimePicker;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,9 +26,9 @@ public class MainActivity extends AppCompatActivity{
     private static final String TAG = "MainActivity";
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
-    private TextView.OnClickListener mDateClickListener;
 
     private EditText dateEt;
+    private EditText timeEt;
     private Spinner mBuilding;
     private Spinner mFloor;
     private Button serachBtn;
@@ -38,27 +39,64 @@ public class MainActivity extends AppCompatActivity{
     private ArrayAdapter<CharSequence> BFloorAdapter;
     private ArrayAdapter<CharSequence> EFloorAdapter;
 
+    public MainActivity() {
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         dateEt = findViewById(R.id.date_edit_text);
+        timeEt = findViewById(R.id.time_edit_text);
         mBuilding = findViewById(R.id.SpBuilding);
         mFloor = findViewById(R.id.SpFloor);
         serachBtn = findViewById(R.id.search_button);
 
         createAdaptersAndEvents();
 
-        dateEt.setOnClickListener(mDateClickListener);
         DateFormat dateFormat = SimpleDateFormat.getDateInstance();
         dateEt.setText(dateFormat.format(new Date()));
+
+        Calendar now = Calendar.getInstance();
+        showTime(now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE));
 
         mBuilding.setOnItemSelectedListener(mBuildingItemSelected);
 
         mFloor.setAdapter(AFloorAdapter);
         mFloor.setOnItemSelectedListener(mFloorItemSelected);
 
+    }
+
+    public void showDatePicker(View view) {
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dialog = new DatePickerDialog(
+                MainActivity.this,
+                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                mDateSetListener,
+                year, month, day);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+    private void showTime(int hourOfDay, int minute) {
+        String timeStr = hourOfDay + ":" + minute;
+        timeEt.setText(timeStr);
+    }
+
+    public void showTimePicker(View view) {
+        Calendar now = Calendar.getInstance();
+        TimePickerDialog dialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                showTime(hourOfDay, minute);
+            }
+        }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
+        dialog.show();
     }
 
     private void createAdaptersAndEvents() {
@@ -76,24 +114,6 @@ public class MainActivity extends AppCompatActivity{
             }
         };
 
-        mDateClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Calendar cal = Calendar.getInstance();
-                int year = cal.get(Calendar.YEAR);
-                int month = cal.get(Calendar.MONTH);
-                int day = cal.get(Calendar.DAY_OF_MONTH);
-
-                DatePickerDialog dialog = new DatePickerDialog(
-                        MainActivity.this,
-                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                        mDateSetListener,
-                        year, month, day);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
-            }
-        };
-
 
         mDayTimeItemSelected = new Spinner.OnItemSelectedListener() {
             @Override
@@ -105,7 +125,6 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {}
         };
-
 
         AFloorAdapter = ArrayAdapter.createFromResource(
                 this,
