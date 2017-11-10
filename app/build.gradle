@@ -1,7 +1,15 @@
 apply plugin: 'com.android.application'
 
+
 android {
     compileSdkVersion 26
+    buildToolsVersion '26.0.2'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     defaultConfig {
         applicationId "com.log515.lambda.wherework"
         minSdkVersion 19
@@ -9,6 +17,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -16,7 +25,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
 }
+
+repositories {
+    maven {
+        url "https://s3.amazonaws.com/repo.commonsware.com"
+    }
+}
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -25,4 +43,11 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    compile 'com.commonsware.cwac:wakeful:1.0.5'
+    compile 'com.squareup.okhttp:okhttp:2.7.5'
+    compile 'joda-time:joda-time:2.9.4'
+    compile 'com.google.code.ksoap2-android:ksoap2-android:3.6.1'
+
+//    compile 'com.android.support:multidex:1.0.2'
 }
