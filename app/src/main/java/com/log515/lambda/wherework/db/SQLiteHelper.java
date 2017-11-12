@@ -3,10 +3,12 @@ package com.log515.lambda.wherework.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.log515.lambda.wherework.model.CoursHoraire;
+import com.log515.lambda.wherework.model.LocalOccupation;
+import com.log515.lambda.wherework.model.signets.CoursHoraire;
 import com.log515.lambda.wherework.soap.SignetsMobileSoap;
 import com.log515.lambda.wherework.utils.Utils;
 
@@ -15,11 +17,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.annotations.Nullable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -90,6 +94,66 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
     }
+
+    public List<LocalOccupation> getLocalOccupation() {
+
+        Cursor cursor = this.getReadableDatabase()
+                .rawQuery("    SELECT " +
+                        "    t2.local as local, " +
+                        "    t2.jour as jour, " +
+                        "    MAX(t2.morning) as occupied_morning, " +
+                        "    MAX(t2.afternoon) as occupied_afternoon, " +
+                        "    MAX(t2.evening) as occupied_evening " +
+                        "    FROM ( " +
+                        "            SELECT " +
+                        "                    s.local, " +
+                        "            s.jour, " +
+                        "            CASE " +
+                        "                    WHEN s.heureDebut < '12:00' " +
+                        "                    THEN 1 " +
+                        "                    ELSE 0 " +
+                        "                    END AS morning, " +
+                        "            CASE " +
+                        "                    WHEN s.heureDebut >= '12:00' AND s.heureDebut <= '17:00' " +
+                        "                    THEN 1 " +
+                        "                    ELSE 0 " +
+                        "                    END AS afternoon, " +
+                        "            CASE " +
+                        "                    WHEN s.heureDebut > '17:00' " +
+                        "                    THEN 1 " +
+                        "                    ELSE 0 " +
+                        "                    END AS evening " +
+                        "                    FROM salles_cours_session s " +
+                        "                    WHERE s.local NOT LIKE '% %' " +
+                        "    ) as t2 " +
+                        "    GROUP BY t2.local,t2.jour;", null);
+
+        List<LocalOccupation> localOccupationList = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            LocalOccupation localOccupation = new LocalOccupation();
+
+            boolean occupiedMorning = cursor.getInt(cursor.getColumnIndex("occupied_morning")) == 1;
+            boolean occupiedAfternoon = cursor.getInt(cursor.getColumnIndex("occupied_afternoon")) == 1;
+            boolean occupiedEvening = cursor.getInt(cursor.getColumnIndex("occupied_evening")) == 1;
+            int dayOfWeek = cursor.getInt(cursor.getColumnIndex("jour"));
+            String local = cursor.getString(cursor.getColumnIndex("local"));
+
+            localOccupation.setMorning(occupiedMorning);
+            localOccupation.setAfternoon(occupiedAfternoon);
+            localOccupation.setEvening(occupiedEvening);
+            localOccupation.setDayOfWeek(dayOfWeek);
+            localOccupation.setLocal(local);
+
+            localOccupationList.add(localOccupation);
+        }
+
+        cursor.close();
+
+        return localOccupationList;
+    }
+
+
 
     public Observable<List<CoursHoraire>> syncDB() {
 

@@ -12,7 +12,42 @@ package com.log515.lambda.wherework.soap;
 
 
 
-import com.log515.lambda.wherework.model.*;
+import com.log515.lambda.wherework.model.signets.ArrayOfCours;
+import com.log515.lambda.wherework.model.signets.ArrayOfCoursHoraire;
+import com.log515.lambda.wherework.model.signets.ArrayOfElementEvaluation;
+import com.log515.lambda.wherework.model.signets.ArrayOfEnseignant;
+import com.log515.lambda.wherework.model.signets.ArrayOfEvaluationCours;
+import com.log515.lambda.wherework.model.signets.ArrayOfHoraireActivite;
+import com.log515.lambda.wherework.model.signets.ArrayOfHoraireExamenFinal;
+import com.log515.lambda.wherework.model.signets.ArrayOfJoursRemplaces;
+import com.log515.lambda.wherework.model.signets.ArrayOfPersonne;
+import com.log515.lambda.wherework.model.signets.ArrayOfProgramme;
+import com.log515.lambda.wherework.model.signets.ArrayOfSeances;
+import com.log515.lambda.wherework.model.signets.ArrayOfTrimestre;
+import com.log515.lambda.wherework.model.signets.Cours;
+import com.log515.lambda.wherework.model.signets.CoursHoraire;
+import com.log515.lambda.wherework.model.signets.ElementEvaluation;
+import com.log515.lambda.wherework.model.signets.Enseignant;
+import com.log515.lambda.wherework.model.signets.Etudiant;
+import com.log515.lambda.wherework.model.signets.EvaluationCours;
+import com.log515.lambda.wherework.model.signets.HoraireActivite;
+import com.log515.lambda.wherework.model.signets.HoraireExamenFinal;
+import com.log515.lambda.wherework.model.signets.JoursRemplaces;
+import com.log515.lambda.wherework.model.signets.ListeCoursHoraire;
+import com.log515.lambda.wherework.model.signets.ListeDeCours;
+import com.log515.lambda.wherework.model.signets.ListeDeSessions;
+import com.log515.lambda.wherework.model.signets.ListeDesActivitesEtProf;
+import com.log515.lambda.wherework.model.signets.ListeDesCoequipiers;
+import com.log515.lambda.wherework.model.signets.ListeDesElementsEvaluation;
+import com.log515.lambda.wherework.model.signets.ListeDesProgrammes;
+import com.log515.lambda.wherework.model.signets.ListeEvaluationsCours;
+import com.log515.lambda.wherework.model.signets.ListeHoraireExamensFinaux;
+import com.log515.lambda.wherework.model.signets.ListeJoursRemplaces;
+import com.log515.lambda.wherework.model.signets.ListeSeances;
+import com.log515.lambda.wherework.model.signets.Personne;
+import com.log515.lambda.wherework.model.signets.Programme;
+import com.log515.lambda.wherework.model.signets.Seances;
+import com.log515.lambda.wherework.model.signets.Trimestre;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.*;

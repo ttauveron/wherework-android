@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:orientation="horizontal"
+    android:paddingBottom="2dp"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="2dp">
+
+    <LinearLayout
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/tv_local"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="A-3212"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_jour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Lundi" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:orientation="horizontal">
+
+        <com.github.pavlospt.CircleView
+            android:id="@+id/cv_morning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cv_backgroundColorValue="@color/red_ets"
+            app:cv_fillRadius="0"
+            app:cv_strokeColorValue="@color/dark_black_ets"
+            app:cv_strokeWidthSize="3"
+            app:cv_subtitleText=""
+            app:cv_titleColor="@color/dark_black_ets"
+            app:cv_titleSize="12dp"
+            app:cv_titleText="AM" />
+
+        <com.github.pavlospt.CircleView
+            android:id="@+id/cv_afternoon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cv_backgroundColorValue="@color/green_3"
+            app:cv_fillRadius="0"
+            app:cv_strokeColorValue="@color/dark_black_ets"
+            app:cv_strokeWidthSize="3"
+            app:cv_subtitleText=""
+            app:cv_titleColor="@color/dark_black_ets"
+            app:cv_titleSize="12dp"
+            app:cv_titleText="PM" />
+
+        <com.github.pavlospt.CircleView
+            android:id="@+id/cv_evening"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cv_backgroundColorValue="@color/green_3"
+            app:cv_fillRadius="0"
+            app:cv_strokeColorValue="@color/dark_black_ets"
+            app:cv_strokeWidthSize="3"
+            app:cv_subtitleText=""
+            app:cv_titleColor="@color/dark_black_ets"
+            app:cv_titleSize="12dp"
+            app:cv_titleText="NT" />
+
+
+    </LinearLayout>
+</LinearLayout>
