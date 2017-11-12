@@ -9,7 +9,9 @@ import com.log515.lambda.wherework.R;
 import com.log515.lambda.wherework.db.SQLiteHelper;
 import com.log515.lambda.wherework.model.LocalOccupation;
 import com.log515.lambda.wherework.ui.adapters.LocalOccupationAdapter;
+import com.log515.lambda.wherework.utils.LocalOccupationComparator;
 
+import java.util.Collections;
 import java.util.List;
 
 public class TestActivity extends AppCompatActivity {
@@ -26,6 +28,7 @@ public class TestActivity extends AppCompatActivity {
         SQLiteHelper database = new SQLiteHelper(this);
 
         List<LocalOccupation> localOccupation = database.getLocalOccupation();
+        Collections.sort(localOccupation,new LocalOccupationComparator());
         LocalOccupationAdapter adapter = new LocalOccupationAdapter(this, R.layout.row_local, localOccupation);
 
         localOccupationListView.setAdapter(adapter);
