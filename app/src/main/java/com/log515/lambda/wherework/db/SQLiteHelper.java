@@ -98,35 +98,30 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public List<LocalOccupation> getLocalOccupation() {
 
         Cursor cursor = this.getReadableDatabase()
-                .rawQuery("    SELECT " +
-                        "    t2.local as local, " +
-                        "    t2.jour as jour, " +
-                        "    MAX(t2.morning) as occupied_morning, " +
-                        "    MAX(t2.afternoon) as occupied_afternoon, " +
-                        "    MAX(t2.evening) as occupied_evening " +
-                        "    FROM ( " +
-                        "            SELECT " +
-                        "                    s.local, " +
-                        "            s.jour, " +
-                        "            CASE " +
-                        "                    WHEN s.heureDebut < '12:00' " +
-                        "                    THEN 1 " +
-                        "                    ELSE 0 " +
-                        "                    END AS morning, " +
-                        "            CASE " +
-                        "                    WHEN s.heureDebut >= '12:00' AND s.heureDebut <= '17:00' " +
-                        "                    THEN 1 " +
-                        "                    ELSE 0 " +
-                        "                    END AS afternoon, " +
-                        "            CASE " +
-                        "                    WHEN s.heureDebut > '17:00' " +
-                        "                    THEN 1 " +
-                        "                    ELSE 0 " +
-                        "                    END AS evening " +
-                        "                    FROM salles_cours_session s " +
-                        "                    WHERE s.local NOT LIKE '% %' " +
-                        "    ) as t2 " +
-                        "    GROUP BY t2.local,t2.jour;", null);
+                .rawQuery("SELECT " +
+                        " t2.local as local, " +
+                        " t2.jour as jour, " +
+                        " MAX(t2.morning)   AS occupied_morning, " +
+                        " MAX(t2.afternoon) AS occupied_afternoon, " +
+                        " MAX(t2.evening)   AS occupied_evening " +
+                        "FROM ( " +
+                        "      SELECT " +
+                        "        s.local, " +
+                        "        s.jour, " +
+                        "        CASE WHEN s.heureDebut < '12:00' THEN 1 ELSE 0 END AS morning, " +
+                        "        CASE WHEN s.heureDebut >= '12:00' AND s.heureDebut <= '17:00' THEN 1 ELSE 0 END AS afternoon, " +
+                        "        CASE WHEN s.heureDebut > '17:00' THEN 1 ELSE 0 END AS evening " +
+                        "      FROM salles_cours_session s " +
+                        "      WHERE s.local NOT LIKE '% %' " +
+                        "    ) AS t2 " +
+                        "GROUP BY t2.local, t2.jour " +
+                        "HAVING (MAX(t2.morning) + MAX(t2.afternoon) + MAX(t2.evening)) != 3 " +
+                        " " +
+                        "UNION SELECT DISTINCT s1.local, s2.jour, 0, 0, 0 " +
+                        "FROM salles_cours_session s1, salles_cours_session s2 " +
+                        "WHERE s1.local NOT LIKE '% %' " +
+                        "EXCEPT SELECT local,jour,0,0,0 FROM salles_cours_session " +
+                        ";", null);
 
         List<LocalOccupation> localOccupationList = new ArrayList<>();
 
