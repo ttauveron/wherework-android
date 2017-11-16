@@ -2,9 +2,9 @@
 <resources>
 
     <string-array name="DayTimeArray">
-        <item>Morning</item>
-        <item>AfterNoon</item>
-        <item>Evening</item>
+        <item>Avant-midi</item>
+        <item>Après-midi</item>
+        <item>Soir</item>
     </string-array>
 
     <string-array name="BuildingArray">

@@ -12,85 +12,72 @@
         android:layout_margin="20dp">
 
         <TextView
-            android:id="@+id/LbTop"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Find empty classrooms at"
-            android:textSize="18sp" />
-
-        <TextView
             android:id="@+id/LbSchoolName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/LbTop"
             android:layout_marginBottom="10dp"
-            android:text="École de technologie supérieure"
+            android:text="Trouvez une salle libre"
             android:textSize="24sp" />
 
-        <LinearLayout
-            android:id="@+id/time_layout"
-            android:layout_width="match_parent"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/date_text_input_layout"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/LbSchoolName"
+            android:hint="Date">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/date_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:onClick="showDatePicker"
+                tools:text="10/11/2017" />
+        </android.support.design.widget.TextInputLayout>
+
+        <fr.ganfra.materialspinner.MaterialSpinner
+            android:id="@+id/temps_spinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/date_text_input_layout"
+            android:entries="@array/DayTimeArray"
+            app:ms_hint="Temps"
+            app:ms_hintColor="?android:textColorHint" />
+
+        <LinearLayout
+            android:id="@+id/location_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/temps_spinner"
             android:orientation="horizontal">
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/date_text_input_layout"
-                android:layout_width="fill_parent"
+            <fr.ganfra.materialspinner.MaterialSpinner
+                android:id="@+id/SpBuilding"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
                 android:layout_weight="0.5"
-                android:hint="Date">
+                android:entries="@array/BuildingArray"
+                app:ms_hint="Pavillon"
+                app:ms_hintColor="?android:textColorHint" />
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/date_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:onClick="showDatePicker"
-                    tools:text="10/11/2017" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/time_text_input_layout"
-                android:layout_width="fill_parent"
+            <fr.ganfra.materialspinner.MaterialSpinner
+                android:id="@+id/SpFloor"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
                 android:layout_weight="0.5"
-                android:hint="Heure">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/time_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:onClick="showTimePicker"
-                    tools:text="14 h 00" />
-            </android.support.design.widget.TextInputLayout>
+                android:entries="@array/AFloorArray"
+                app:ms_hint="Étage"
+                app:ms_hintColor="?android:textColorHint" />
         </LinearLayout>
-
-        <fr.ganfra.materialspinner.MaterialSpinner
-            android:id="@+id/SpBuilding"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/time_layout"
-            android:entries="@array/BuildingArray"
-            app:ms_hint="Pavillon"
-            app:ms_hintColor="?android:textColorHint" />
-
-        <fr.ganfra.materialspinner.MaterialSpinner
-            android:id="@+id/SpFloor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/SpBuilding"
-            android:entries="@array/AFloorArray"
-            app:ms_hint="Étage"
-            app:ms_hintColor="?android:textColorHint" />
 
         <Button
             android:id="@+id/search_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/SpFloor"
+            android:layout_below="@id/location_layout"
             android:layout_marginTop="24dp"
-            android:text="Trouver un local vide" />
+            android:text="Chercher une salle libre" />
     </RelativeLayout>
 </ScrollView>

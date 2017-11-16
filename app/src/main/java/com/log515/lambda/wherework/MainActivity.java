@@ -1,7 +1,6 @@
 package com.log515.lambda.wherework;
 
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TimePicker;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -28,7 +26,7 @@ public class MainActivity extends AppCompatActivity{
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
     private EditText dateEt;
-    private EditText timeEt;
+    private Spinner tempsSpinner;
     private Spinner mBuilding;
     private Spinner mFloor;
     private Button serachBtn;
@@ -48,7 +46,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         dateEt = findViewById(R.id.date_edit_text);
-        timeEt = findViewById(R.id.time_edit_text);
+        tempsSpinner = findViewById(R.id.temps_spinner);
         mBuilding = findViewById(R.id.SpBuilding);
         mFloor = findViewById(R.id.SpFloor);
         serachBtn = findViewById(R.id.search_button);
@@ -57,9 +55,6 @@ public class MainActivity extends AppCompatActivity{
 
         DateFormat dateFormat = SimpleDateFormat.getDateInstance();
         dateEt.setText(dateFormat.format(new Date()));
-
-        Calendar now = Calendar.getInstance();
-        showTime(now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE));
 
         mBuilding.setOnItemSelectedListener(mBuildingItemSelected);
 
@@ -80,22 +75,6 @@ public class MainActivity extends AppCompatActivity{
                 mDateSetListener,
                 year, month, day);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
-    }
-
-    private void showTime(int hourOfDay, int minute) {
-        String timeStr = hourOfDay + ":" + minute;
-        timeEt.setText(timeStr);
-    }
-
-    public void showTimePicker(View view) {
-        Calendar now = Calendar.getInstance();
-        TimePickerDialog dialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                showTime(hourOfDay, minute);
-            }
-        }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
         dialog.show();
     }
 
