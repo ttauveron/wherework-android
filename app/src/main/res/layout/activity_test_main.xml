@@ -23,6 +23,12 @@
             android:layout_height="wrap_content"
             android:text="Launch Test Activity" />
 
+        <Button
+            android:id="@+id/btn_launch_activity2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Launch Filter menu Activity" />
+
         <ProgressBar
             android:id="@+id/progressbar_loading"
             android:layout_width="match_parent"

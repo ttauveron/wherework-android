@@ -50,6 +50,11 @@ public class TestMainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        findViewById(R.id.btn_launch_activity2).setOnClickListener(view -> {
+            Intent intent = new Intent(TestMainActivity.this, MainActivity.class);
+            startActivity(intent);
+        });
+
 
     }
 

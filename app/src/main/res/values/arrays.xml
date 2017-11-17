@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="DayTimeArray">
+        <item>Avant-midi</item>
+        <item>Après-midi</item>
+        <item>Soir</item>
+    </string-array>
+
+    <string-array name="BuildingArray">
+        <item>A</item>
+        <item>B</item>
+        <item>E</item>
+    </string-array>
+
+    <string-array name="AFloorArray">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <string-array name="BFloorArray">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="EFloorArray">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+</resources>
