@@ -14,7 +14,7 @@ import com.log515.lambda.wherework.utils.LocalOccupationComparator;
 import java.util.Collections;
 import java.util.List;
 
-public class TestActivity extends AppCompatActivity {
+public class TestUIActivity extends AppCompatActivity {
 
     private ListView localOccupationListView;
 

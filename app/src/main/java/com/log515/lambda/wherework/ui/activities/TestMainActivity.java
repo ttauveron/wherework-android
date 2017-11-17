@@ -1,15 +1,12 @@
 package com.log515.lambda.wherework.ui.activities;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 import com.log515.lambda.wherework.R;
@@ -19,7 +16,7 @@ import com.log515.lambda.wherework.db.SQLiteHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity {
+public class TestMainActivity extends AppCompatActivity {
 
 
     private SQLiteHelper database = new SQLiteHelper(this);
@@ -30,13 +27,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_test_main);
         syncButton = findViewById(R.id.btn_sync);
         progressBarLoading = findViewById(R.id.progressbar_loading);
         btnLaunchActivity = findViewById(R.id.btn_launch_activity);
 
         syncButton.setOnClickListener(view -> {
-            Log.d("MainActivity", "start");
+            Log.d("TestMainActivity", "start");
             progressBarLoading.setVisibility(View.VISIBLE);
             database.syncDB()
                     .subscribeOn(Schedulers.newThread())
@@ -49,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         btnLaunchActivity.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, TestActivity.class);
+            Intent intent = new Intent(TestMainActivity.this, TestUIActivity.class);
             startActivity(intent);
         });
 
