@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
 
@@ -27,10 +27,9 @@ public class MainActivity extends AppCompatActivity{
 
     private EditText dateEt;
     private Spinner tempsSpinner;
-    private Spinner mBuilding;
-    private Spinner mFloor;
+    private Spinner pavillonSpinner;
+    private Spinner etageSpinner;
     private Button serachBtn;
-    private Spinner.OnItemSelectedListener mDayTimeItemSelected;
     private Spinner.OnItemSelectedListener mBuildingItemSelected;
     private Spinner.OnItemSelectedListener mFloorItemSelected;
     private ArrayAdapter<CharSequence> AFloorAdapter;
@@ -47,8 +46,8 @@ public class MainActivity extends AppCompatActivity{
 
         dateEt = findViewById(R.id.date_edit_text);
         tempsSpinner = findViewById(R.id.temps_spinner);
-        mBuilding = findViewById(R.id.SpBuilding);
-        mFloor = findViewById(R.id.SpFloor);
+        pavillonSpinner = findViewById(R.id.SpBuilding);
+        etageSpinner = findViewById(R.id.SpFloor);
         serachBtn = findViewById(R.id.search_button);
 
         createAdaptersAndEvents();
@@ -56,10 +55,10 @@ public class MainActivity extends AppCompatActivity{
         DateFormat dateFormat = SimpleDateFormat.getDateInstance();
         dateEt.setText(dateFormat.format(new Date()));
 
-        mBuilding.setOnItemSelectedListener(mBuildingItemSelected);
+        pavillonSpinner.setOnItemSelectedListener(mBuildingItemSelected);
 
-        mFloor.setAdapter(AFloorAdapter);
-        mFloor.setOnItemSelectedListener(mFloorItemSelected);
+        etageSpinner.setAdapter(AFloorAdapter);
+        etageSpinner.setOnItemSelectedListener(mFloorItemSelected);
 
     }
 
@@ -93,18 +92,6 @@ public class MainActivity extends AppCompatActivity{
             }
         };
 
-
-        mDayTimeItemSelected = new Spinner.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                String sSelected = adapterView.getItemAtPosition(position).toString();
-                Log.d(TAG, "DayTime Selected : " + sSelected);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
-        };
-
         AFloorAdapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.AFloorArray,
@@ -130,7 +117,8 @@ public class MainActivity extends AppCompatActivity{
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
         };
 
         mBuildingItemSelected = new Spinner.OnItemSelectedListener() {
@@ -139,18 +127,22 @@ public class MainActivity extends AppCompatActivity{
                 String sSelected = adapterView.getItemAtPosition(position).toString();
                 Log.d(TAG, "Building Selected : " + sSelected);
 
-                switch(sSelected) {
-                    case "A": mFloor.setAdapter(AFloorAdapter);
+                switch (sSelected) {
+                    case "A":
+                        etageSpinner.setAdapter(AFloorAdapter);
                         break;
-                    case "B": mFloor.setAdapter(BFloorAdapter);
+                    case "B":
+                        etageSpinner.setAdapter(BFloorAdapter);
                         break;
-                    case "E": mFloor.setAdapter(EFloorAdapter);
+                    case "E":
+                        etageSpinner.setAdapter(EFloorAdapter);
                         break;
                 }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
         };
     }
 }
