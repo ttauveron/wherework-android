@@ -32,6 +32,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "wherework.db";
     public static final String TABLE_COURS = "salles_cours_session";
+    public static final String TABLE_DISPOS = "avail_salles_cours";
+
     private static final int DATABASE_VERSION = 1;
 
 
@@ -55,18 +57,26 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "   titreCours TEXT " +
                 ");");
 
+        sqLiteDatabase.execSQL("CREATE INDEX index_local ON " + TABLE_COURS + "(local);");
+        sqLiteDatabase.execSQL("CREATE INDEX index_jour ON " + TABLE_COURS + "(jour);");
+        sqLiteDatabase.execSQL("CREATE INDEX index_local_jour ON " + TABLE_COURS + "(local,jour);");
+
+        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_DISPOS + " (local TEXT, jour INTEGER, occupied_morning INTEGER, occupied_afternoon INTEGER, occupied_evening INTEGER);");
+
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_COURS + ";");
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_DISPOS + ";");
         onCreate(sqLiteDatabase);
     }
 
     public void truncateCoursesTable() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_COURS);
+        db.execSQL("DELETE FROM " + TABLE_DISPOS);
     }
 
     public void insertListeCours(List<CoursHoraire> coursHoraires) {
@@ -93,35 +103,38 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
+
+        db.execSQL("INSERT INTO " + TABLE_DISPOS + " " +
+                "SELECT " +
+                " t2.local as local, " +
+                " t2.jour as jour, " +
+                " MAX(t2.morning)   AS occupied_morning, " +
+                " MAX(t2.afternoon) AS occupied_afternoon, " +
+                " MAX(t2.evening)   AS occupied_evening " +
+                "FROM ( " +
+                "      SELECT " +
+                "        s.local, " +
+                "        s.jour, " +
+                "        CASE WHEN s.heureDebut < '12:00' THEN 1 ELSE 0 END AS morning, " +
+                "        CASE WHEN s.heureDebut >= '12:00' AND s.heureDebut <= '17:00' THEN 1 ELSE 0 END AS afternoon, " +
+                "        CASE WHEN s.heureDebut > '17:00' THEN 1 ELSE 0 END AS evening " +
+                "      FROM salles_cours_session s " +
+                "      WHERE s.local NOT LIKE '% %' " +
+                "    ) AS t2 " +
+                "GROUP BY t2.local, t2.jour " +
+                "HAVING (MAX(t2.morning) + MAX(t2.afternoon) + MAX(t2.evening)) != 3 " +
+                " " +
+                "UNION SELECT DISTINCT s1.local, s2.jour, 0, 0, 0 " +
+                "FROM salles_cours_session s1, salles_cours_session s2 " +
+                "WHERE s1.local NOT LIKE '% %' " +
+                "EXCEPT SELECT local,jour,0,0,0 FROM salles_cours_session " +
+                ";");
     }
 
     public List<LocalOccupation> getLocalOccupation() {
 
         Cursor cursor = this.getReadableDatabase()
-                .rawQuery("SELECT " +
-                        " t2.local as local, " +
-                        " t2.jour as jour, " +
-                        " MAX(t2.morning)   AS occupied_morning, " +
-                        " MAX(t2.afternoon) AS occupied_afternoon, " +
-                        " MAX(t2.evening)   AS occupied_evening " +
-                        "FROM ( " +
-                        "      SELECT " +
-                        "        s.local, " +
-                        "        s.jour, " +
-                        "        CASE WHEN s.heureDebut < '12:00' THEN 1 ELSE 0 END AS morning, " +
-                        "        CASE WHEN s.heureDebut >= '12:00' AND s.heureDebut <= '17:00' THEN 1 ELSE 0 END AS afternoon, " +
-                        "        CASE WHEN s.heureDebut > '17:00' THEN 1 ELSE 0 END AS evening " +
-                        "      FROM salles_cours_session s " +
-                        "      WHERE s.local NOT LIKE '% %' " +
-                        "    ) AS t2 " +
-                        "GROUP BY t2.local, t2.jour " +
-                        "HAVING (MAX(t2.morning) + MAX(t2.afternoon) + MAX(t2.evening)) != 3 " +
-                        " " +
-                        "UNION SELECT DISTINCT s1.local, s2.jour, 0, 0, 0 " +
-                        "FROM salles_cours_session s1, salles_cours_session s2 " +
-                        "WHERE s1.local NOT LIKE '% %' " +
-                        "EXCEPT SELECT local,jour,0,0,0 FROM salles_cours_session " +
-                        ";", null);
+                .rawQuery("SELECT * FROM " + TABLE_DISPOS, null);
 
         List<LocalOccupation> localOccupationList = new ArrayList<>();
 
@@ -147,7 +160,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         return localOccupationList;
     }
-
 
 
     public Observable<List<CoursHoraire>> syncDB() {
