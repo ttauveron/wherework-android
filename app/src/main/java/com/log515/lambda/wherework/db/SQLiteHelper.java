@@ -131,8 +131,79 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 ";");
     }
 
-    public List<LocalOccupation> getLocalOccupation() {
+    public List<LocalOccupation> getLocalOccupation(int temps, int pavillon, int etage) {
 
+        String condition = "";
+        if (temps != 0)
+            condition += " WHERE ";
+
+        switch(temps)
+        {
+            case 1: condition += "occupied_morning == 0"; break;
+            case 2: condition += "occupied_afternoon == 0"; break;
+            case 3: condition += "occupied_evening == 0"; break;
+            default:break;
+        }
+
+        if (condition.isEmpty() && pavillon != 0)
+            condition += " WHERE ";
+
+        if (!condition.isEmpty() && pavillon != 0)
+            condition += " AND ";
+
+        switch(pavillon)
+        {
+            case 1: condition += "local LIKE '%A-%'"; break;
+            case 2: condition += "local LIKE '%A-%'"; break;
+            case 3: condition += "local LIKE '%E-%'"; break;
+            default:break;
+        }
+
+        if (condition.isEmpty() && etage != 0)
+            condition += " WHERE ";
+
+        if (!condition.isEmpty() && etage != 0)
+            condition += " AND ";
+
+        switch(etage)
+        {
+            case 1: condition += "local LIKE '%-0%'"; break;
+            case 2: condition += "local LIKE '%-1%'"; break;
+            case 3: condition += "local LIKE '%-2%'"; break;
+            case 4: condition += "local LIKE '%-3%'"; break;
+            case 5: condition += "local LIKE '%-4%'"; break;
+            default:break;
+        }
+
+        Cursor cursor = this.getReadableDatabase()
+                .rawQuery("SELECT * FROM " + TABLE_DISPOS + condition, null);
+
+        List<LocalOccupation> localOccupationList = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            LocalOccupation localOccupation = new LocalOccupation();
+
+            boolean occupiedMorning = cursor.getInt(cursor.getColumnIndex("occupied_morning")) == 1;
+            boolean occupiedAfternoon = cursor.getInt(cursor.getColumnIndex("occupied_afternoon")) == 1;
+            boolean occupiedEvening = cursor.getInt(cursor.getColumnIndex("occupied_evening")) == 1;
+            int dayOfWeek = cursor.getInt(cursor.getColumnIndex("jour"));
+            String local = cursor.getString(cursor.getColumnIndex("local"));
+
+            localOccupation.setMorning(occupiedMorning);
+            localOccupation.setAfternoon(occupiedAfternoon);
+            localOccupation.setEvening(occupiedEvening);
+            localOccupation.setDayOfWeek(dayOfWeek);
+            localOccupation.setLocal(local);
+
+            localOccupationList.add(localOccupation);
+        }
+
+        cursor.close();
+
+        return localOccupationList;
+    }
+
+    public List<LocalOccupation> getLocalOccupation() {
         Cursor cursor = this.getReadableDatabase()
                 .rawQuery("SELECT * FROM " + TABLE_DISPOS, null);
 
@@ -160,7 +231,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         return localOccupationList;
     }
-
 
     public Observable<List<CoursHoraire>> syncDB() {
 

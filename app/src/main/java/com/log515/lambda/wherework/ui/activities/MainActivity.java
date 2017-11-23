@@ -12,14 +12,21 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.log515.lambda.wherework.R;
+import com.log515.lambda.wherework.db.SQLiteHelper;
+import com.log515.lambda.wherework.model.LocalOccupation;
+import com.log515.lambda.wherework.ui.adapters.LocalOccupationAdapter;
+import com.log515.lambda.wherework.utils.LocalOccupationComparator;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<CharSequence> AFloorAdapter;
     private ArrayAdapter<CharSequence> BFloorAdapter;
     private ArrayAdapter<CharSequence> EFloorAdapter;
+
+    private ListView localOccupationListView;
 
     public MainActivity() {
     }
@@ -62,6 +71,26 @@ public class MainActivity extends AppCompatActivity {
         etageSpinner.setAdapter(AFloorAdapter);
         etageSpinner.setOnItemSelectedListener(mFloorItemSelected);
 
+        localOccupationListView = findViewById(R.id.listView_localoccupation);
+
+        SQLiteHelper database = new SQLiteHelper(this);
+
+        List<LocalOccupation> localOccupation = database.getLocalOccupation();
+        Collections.sort(localOccupation,new LocalOccupationComparator());
+        LocalOccupationAdapter adapter = new LocalOccupationAdapter(this, R.layout.row_local, localOccupation);
+
+        localOccupationListView.setAdapter(adapter);
+
+        adapter.notifyDataSetChanged();
+
+        serachBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                List<LocalOccupation> localOccupation = database.getLocalOccupation(tempsSpinner.getSelectedItemPosition(), pavillonSpinner.getSelectedItemPosition(), etageSpinner.getSelectedItemPosition());
+                Collections.sort(localOccupation,new LocalOccupationComparator());
+                adapter.clear();
+                adapter.addAll(localOccupation);
+            }
+        });
     }
 
     public void showDatePicker(View view) {
