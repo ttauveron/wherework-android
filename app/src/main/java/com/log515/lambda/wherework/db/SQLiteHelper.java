@@ -131,7 +131,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 ";");
     }
 
-    public List<LocalOccupation> getLocalOccupation(int temps, int pavillon, int etage) {
+    public List<LocalOccupation> getLocalOccupation(int temps, int pavillon, int etage, int jourSemaine) {
 
         String condition = "";
         if (temps != 0)
@@ -147,22 +147,20 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         if (condition.isEmpty() && pavillon != 0)
             condition += " WHERE ";
-
-        if (!condition.isEmpty() && pavillon != 0)
+        else if (!condition.isEmpty() && pavillon != 0)
             condition += " AND ";
 
         switch(pavillon)
         {
             case 1: condition += "local LIKE '%A-%'"; break;
-            case 2: condition += "local LIKE '%A-%'"; break;
+            case 2: condition += "local LIKE '%B-%'"; break;
             case 3: condition += "local LIKE '%E-%'"; break;
             default:break;
         }
 
         if (condition.isEmpty() && etage != 0)
             condition += " WHERE ";
-
-        if (!condition.isEmpty() && etage != 0)
+        else if (!condition.isEmpty() && etage != 0)
             condition += " AND ";
 
         switch(etage)
@@ -174,6 +172,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             case 5: condition += "local LIKE '%-4%'"; break;
             default:break;
         }
+
+        if (condition.isEmpty() && jourSemaine != 0)
+            condition += " WHERE ";
+        else if (!condition.isEmpty() && jourSemaine != 0)
+            condition += " AND ";
+
+        if (jourSemaine != 0)
+            condition += "jour == " + (jourSemaine - 1);
 
         Cursor cursor = this.getReadableDatabase()
                 .rawQuery("SELECT * FROM " + TABLE_DISPOS + condition, null);

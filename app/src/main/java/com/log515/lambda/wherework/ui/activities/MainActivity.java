@@ -22,6 +22,7 @@ import com.log515.lambda.wherework.ui.adapters.LocalOccupationAdapter;
 import com.log515.lambda.wherework.utils.LocalOccupationComparator;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
@@ -85,7 +86,15 @@ public class MainActivity extends AppCompatActivity {
 
         serachBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                List<LocalOccupation> localOccupation = database.getLocalOccupation(tempsSpinner.getSelectedItemPosition(), pavillonSpinner.getSelectedItemPosition(), etageSpinner.getSelectedItemPosition());
+                Calendar c = Calendar.getInstance();
+                int dayOfWeek = 0;
+                try {
+                    c.setTime(dateFormat.parse(dateEt.getText().toString()));
+                    dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                List<LocalOccupation> localOccupation = database.getLocalOccupation(tempsSpinner.getSelectedItemPosition(), pavillonSpinner.getSelectedItemPosition(), etageSpinner.getSelectedItemPosition(), dayOfWeek);
                 Collections.sort(localOccupation,new LocalOccupationComparator());
                 adapter.clear();
                 adapter.addAll(localOccupation);
