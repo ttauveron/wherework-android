@@ -1,6 +1,7 @@
 package com.log515.lambda.wherework.ui.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,6 +19,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class TestMainActivity extends AppCompatActivity {
 
+    private static String ALARM_SCHEDULED_PREF_KEY = "AlarmScheduled";
 
     private SQLiteHelper database = new SQLiteHelper(this);
     private Button syncButton;
@@ -41,10 +43,6 @@ public class TestMainActivity extends AppCompatActivity {
                     .subscribe(o -> progressBarLoading.setVisibility(View.GONE));
         });
 
-        //todo sharedpreference first app start to trigger wakefulintent
-        WakefulIntentService.scheduleAlarms(new WeeklyListener(), getApplicationContext(), false);
-
-
         btnLaunchActivity.setOnClickListener(view -> {
             Intent intent = new Intent(TestMainActivity.this, TestUIActivity.class);
             startActivity(intent);
@@ -54,8 +52,37 @@ public class TestMainActivity extends AppCompatActivity {
             Intent intent = new Intent(TestMainActivity.this, MainActivity.class);
             startActivity(intent);
         });
-
-
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        SharedPreferences sharedPref = getPreferences(MODE_PRIVATE);
+        boolean alarmScheduled = sharedPref.getBoolean(ALARM_SCHEDULED_PREF_KEY, false);
+
+        if (!alarmScheduled) {
+            progressBarLoading.setVisibility(View.VISIBLE);
+            database.syncDB()
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(o -> {
+                        WakefulIntentService.scheduleAlarms(new WeeklyListener(), getApplicationContext(), false);
+
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putBoolean(ALARM_SCHEDULED_PREF_KEY, true);
+                        editor.apply();
+
+                        progressBarLoading.setVisibility(View.GONE);
+
+                        launchActivity();
+                    });
+        } else
+            launchActivity();
+    }
+
+    private void launchActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 }
