@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -20,6 +21,7 @@ import com.log515.lambda.wherework.db.SQLiteHelper;
 import com.log515.lambda.wherework.model.LocalOccupation;
 import com.log515.lambda.wherework.ui.adapters.LocalOccupationAdapter;
 import com.log515.lambda.wherework.utils.LocalOccupationComparator;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -47,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayAdapter<CharSequence> EFloorAdapter;
 
     private ListView localOccupationListView;
+    private SlidingUpPanelLayout slidingUpPanelLayout;
+    private ImageButton slidingUpPanelButton;
 
     public MainActivity() {
     }
@@ -61,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         pavillonSpinner = findViewById(R.id.SpBuilding);
         etageSpinner = findViewById(R.id.SpFloor);
         serachBtn = findViewById(R.id.search_button);
+        slidingUpPanelLayout = findViewById(R.id.sliding_layout);
+        slidingUpPanelButton = findViewById(R.id.sliding_panel_btn);
 
         createAdaptersAndEvents();
 
@@ -84,20 +90,34 @@ public class MainActivity extends AppCompatActivity {
 
         adapter.notifyDataSetChanged();
 
-        serachBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Calendar c = Calendar.getInstance();
-                int dayOfWeek = 0;
-                try {
-                    c.setTime(dateFormat.parse(dateEt.getText().toString()));
-                    dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-                } catch (ParseException e) {
-                    e.printStackTrace();
+        serachBtn.setOnClickListener(v -> {
+            Calendar c = Calendar.getInstance();
+            int dayOfWeek = 0;
+            try {
+                c.setTime(dateFormat.parse(dateEt.getText().toString()));
+                dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            List<LocalOccupation> localOccupation1 = database.getLocalOccupation(tempsSpinner.getSelectedItemPosition(), pavillonSpinner.getSelectedItemPosition(), etageSpinner.getSelectedItemPosition(), dayOfWeek);
+            Collections.sort(localOccupation1,new LocalOccupationComparator());
+            adapter.clear();
+            adapter.addAll(localOccupation1);
+        });
+
+        slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                if (slideOffset > 0) {
+                    slidingUpPanelButton.setImageResource(R.drawable.ic_close_black_24dp);
+                } else {
+                    slidingUpPanelButton.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
                 }
-                List<LocalOccupation> localOccupation = database.getLocalOccupation(tempsSpinner.getSelectedItemPosition(), pavillonSpinner.getSelectedItemPosition(), etageSpinner.getSelectedItemPosition(), dayOfWeek);
-                Collections.sort(localOccupation,new LocalOccupationComparator());
-                adapter.clear();
-                adapter.addAll(localOccupation);
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+
             }
         });
     }
@@ -115,6 +135,13 @@ public class MainActivity extends AppCompatActivity {
                 year, month, day);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
+    }
+
+    public void toggleSlidingPanel(View view) {
+        if (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
+            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        else
+            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
     }
 
     private void createAdaptersAndEvents() {
