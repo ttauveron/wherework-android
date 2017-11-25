@@ -17,41 +17,19 @@ import com.log515.lambda.wherework.db.SQLiteHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class TestMainActivity extends AppCompatActivity {
+public class StartupActivity extends AppCompatActivity {
 
     private static String ALARM_SCHEDULED_PREF_KEY = "AlarmScheduled";
 
     private SQLiteHelper database = new SQLiteHelper(this);
-    private Button syncButton;
     private ProgressBar progressBarLoading;
-    private Button btnLaunchActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test_main);
-        syncButton = findViewById(R.id.btn_sync);
+        setContentView(R.layout.activity_sync_startup);
         progressBarLoading = findViewById(R.id.progressbar_loading);
-        btnLaunchActivity = findViewById(R.id.btn_launch_activity);
 
-        syncButton.setOnClickListener(view -> {
-            Log.d("TestMainActivity", "start");
-            progressBarLoading.setVisibility(View.VISIBLE);
-            database.syncDB()
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(o -> progressBarLoading.setVisibility(View.GONE));
-        });
-
-        btnLaunchActivity.setOnClickListener(view -> {
-            Intent intent = new Intent(TestMainActivity.this, TestUIActivity.class);
-            startActivity(intent);
-        });
-
-        findViewById(R.id.btn_launch_activity2).setOnClickListener(view -> {
-            Intent intent = new Intent(TestMainActivity.this, MainActivity.class);
-            startActivity(intent);
-        });
     }
 
     @Override
@@ -77,8 +55,9 @@ public class TestMainActivity extends AppCompatActivity {
 
                         launchActivity();
                     });
-        } else
+        } else {
             launchActivity();
+        }
     }
 
     private void launchActivity() {
