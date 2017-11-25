@@ -7,6 +7,20 @@
     android:layout_height="match_parent"
     tools:context="com.log515.lambda.wherework.ui.activities.MainActivity">
 
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        sothree:umanoPanelHeight="68dp"
+        sothree:umanoShadowHeight="4dp">
+
+        <ListView
+            android:id="@+id/listView_localoccupation"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:textSize="24sp"></ListView>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -81,10 +95,8 @@
                 android:layout_marginTop="24dp"
                 android:text="Chercher une salle libre" />
         </RelativeLayout>
-        <ListView
-            android:id="@+id/listView_localoccupation"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:textSize="24sp"></ListView>
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+
 
 </LinearLayout>
