@@ -1,5 +1,7 @@
 package com.log515.lambda.wherework.utils;
 
+import android.util.Log;
+
 import com.log515.lambda.wherework.model.LocalOccupation;
 
 import org.joda.time.DateTime;
@@ -17,16 +19,14 @@ public class LocalOccupationComparator implements Comparator<LocalOccupation> {
         DateTime dateTime = new DateTime();
         int today = dateTime.dayOfWeek().get();
 
-
         int jour1 = l1.getDayOfWeek() == 0 ? 7 : l1.getDayOfWeek();
         int jour2 = l2.getDayOfWeek() == 0 ? 7 : l2.getDayOfWeek();
-        int jour1Mod = (today + jour1 ) % 7;
-        int jour2Mod = (today + jour2 ) % 7;
+
+        int jour1Mod = ((jour1 - today) % 7 + 7) % 7;
+        int jour2Mod = ((jour2 - today) % 7 + 7) % 7;
 
         if (jour1Mod < jour2Mod) return -1;
         if (jour1Mod > jour2Mod) return 1;
-
-//        if (jour1 == jour2 && jour1 != today) return 0;
 
         int sumAvail1 = 0, sumAvail2 = 0;
         sumAvail1 += (l1.isMorning() ? 0 : 1) + (l1.isAfternoon() ? 0 : 1) + (l1.isEvening() ? 0 : 1);
