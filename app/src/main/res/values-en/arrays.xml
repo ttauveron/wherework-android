@@ -2,19 +2,19 @@
 <resources>
 
     <string-array name="DayTimeArray">
-        <item>Avant-midi</item>
-        <item>Après-midi</item>
-        <item>Soir</item>
+        <item>Before noon</item>
+        <item>Afternoon</item>
+        <item>Evening</item>
     </string-array>
 
     <string-array name="JourArray">
-        <item>Lundi</item>
-        <item>Mardi</item>
-        <item>Mercredi</item>
-        <item>Jeudi</item>
-        <item>Vendredi</item>
-        <item>Samedi</item>
-        <item>Dimanche</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
     </string-array>
 
     <string-array name="BuildingArray">

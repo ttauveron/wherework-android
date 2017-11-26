@@ -1,83 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
     tools:context="com.log515.lambda.wherework.ui.activities.MainActivity">
 
-    <RelativeLayout
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp">
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        sothree:umanoPanelHeight="68dp"
+        sothree:umanoShadowHeight="4dp"
+        tools:visibility="gone">
 
-        <TextView
-            android:id="@+id/LbSchoolName"
+        <ListView
+            android:id="@+id/listView_localoccupation"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="Trouvez une salle libre"
+            android:layout_height="fill_parent"
             android:textSize="24sp" />
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/date_text_input_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/LbSchoolName"
-            android:hint="Date">
-
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/date_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:focusable="false"
-                android:onClick="showDatePicker"
-                tools:text="10/11/2017" />
-        </android.support.design.widget.TextInputLayout>
-
-        <fr.ganfra.materialspinner.MaterialSpinner
-            android:id="@+id/temps_spinner"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/date_text_input_layout"
-            android:entries="@array/DayTimeArray"
-            app:ms_hint="Temps"
-            app:ms_hintColor="?android:textColorHint" />
-
-        <LinearLayout
-            android:id="@+id/location_layout"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/temps_spinner"
-            android:orientation="horizontal">
+            android:background="@color/black">
+
+            <RelativeLayout
+                android:id="@+id/header"
+
+                android:layout_width="match_parent"
+                android:layout_height="68dp">
+
+                <TextView
+                    android:id="@+id/LbSchoolName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:paddingStart="20dp"
+                    android:text="@string/filtering_options"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp" />
+
+                <ImageButton
+                    android:id="@+id/sliding_panel_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:onClick="toggleSlidingPanel"
+                    android:paddingEnd="15dp"
+                    android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
+                    android:tint="#FFFFFF" />
+            </RelativeLayout>
 
             <fr.ganfra.materialspinner.MaterialSpinner
-                android:id="@+id/SpBuilding"
-                android:layout_width="match_parent"
+                android:id="@+id/jour_spinner"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:layout_weight="0.5"
-                android:entries="@array/BuildingArray"
-                app:ms_hint="Pavillon"
-                app:ms_hintColor="?android:textColorHint" />
+                android:layout_below="@id/header"
+                android:entries="@array/JourArray"
+                app:ms_baseColor="@color/red_ets"
+                app:ms_hint="@string/day_filtering_option"
+                app:ms_hintColor="#bfbfbf" />
 
             <fr.ganfra.materialspinner.MaterialSpinner
-                android:id="@+id/SpFloor"
+                android:id="@+id/temps_spinner"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/jour_spinner"
+                android:entries="@array/DayTimeArray"
+                app:ms_baseColor="@color/red_ets"
+                app:ms_hint="@string/time_filtering_option"
+                app:ms_hintColor="#bfbfbf" />
+
+            <LinearLayout
+                android:id="@+id/location_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_weight="0.5"
-                android:entries="@array/AFloorArray"
-                app:ms_hint="Étage"
-                app:ms_hintColor="?android:textColorHint" />
-        </LinearLayout>
+                android:layout_below="@id/temps_spinner"
+                android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/search_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/location_layout"
-            android:layout_marginTop="24dp"
-            android:text="Chercher une salle libre" />
-    </RelativeLayout>
-</ScrollView>
+                <fr.ganfra.materialspinner.MaterialSpinner
+                    android:id="@+id/SpBuilding"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="0.5"
+                    android:entries="@array/BuildingArray"
+                    app:ms_baseColor="@color/red_ets"
+                    app:ms_hint="@string/building_filtering_option"
+                    app:ms_hintColor="#bfbfbf" />
+
+                <fr.ganfra.materialspinner.MaterialSpinner
+                    android:id="@+id/SpFloor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="0.5"
+                    android:entries="@array/AFloorArray"
+                    app:ms_baseColor="@color/red_ets"
+                    app:ms_hint="@string/floor_filtering_option"
+                    app:ms_hintColor="#bfbfbf" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/search_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/location_layout"
+                android:layout_marginTop="24dp"
+                android:text="@string/search_btn_text" />
+        </RelativeLayout>
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+    <ProgressBar
+        android:id="@+id/sync_progress_bar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:indeterminateOnly="true"
+        android:visibility="gone"
+        tools:visibility="visible" />
+</LinearLayout>

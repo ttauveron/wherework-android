@@ -3,6 +3,7 @@ package com.log515.lambda.wherework.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -18,6 +19,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -28,17 +30,23 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class SQLiteHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "wherework.db";
     public static final String TABLE_COURS = "salles_cours_session";
     public static final String TABLE_DISPOS = "avail_salles_cours";
 
-    private static final int DATABASE_VERSION = 1;
+    public static final String LAST_SYNC_DATE = "last_sync_date";
+
+    private static final int DATABASE_VERSION = 2;
+    private final Context context;
 
 
     public SQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
     @Override
@@ -107,7 +115,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO " + TABLE_DISPOS + " " +
                 "SELECT " +
                 " t2.local as local, " +
-                " t2.jour as jour, " +
+                " CASE WHEN t2.jour = 0 THEN 7 ELSE t2.jour END as jour, " +
                 " MAX(t2.morning)   AS occupied_morning, " +
                 " MAX(t2.afternoon) AS occupied_afternoon, " +
                 " MAX(t2.evening)   AS occupied_evening " +
@@ -124,15 +132,92 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "GROUP BY t2.local, t2.jour " +
                 "HAVING (MAX(t2.morning) + MAX(t2.afternoon) + MAX(t2.evening)) != 3 " +
                 " " +
-                "UNION SELECT DISTINCT s1.local, s2.jour, 0, 0, 0 " +
+                "UNION SELECT DISTINCT s1.local, CASE WHEN s2.jour = 0 THEN 7 ELSE s2.jour END as jour, 0, 0, 0 " +
                 "FROM salles_cours_session s1, salles_cours_session s2 " +
                 "WHERE s1.local NOT LIKE '% %' " +
-                "EXCEPT SELECT local,jour,0,0,0 FROM salles_cours_session " +
+                "EXCEPT SELECT local, CASE WHEN jour = 0 THEN 7 ELSE jour END as jour,0,0,0 FROM salles_cours_session " +
                 ";");
     }
 
-    public List<LocalOccupation> getLocalOccupation() {
+    public List<LocalOccupation> getLocalOccupation(int temps, int pavillon, int etage, int jourSemaine) {
 
+        String condition = "";
+        if (temps != 0)
+            condition += " WHERE ";
+
+        switch(temps)
+        {
+            case 1: condition += "occupied_morning == 0"; break;
+            case 2: condition += "occupied_afternoon == 0"; break;
+            case 3: condition += "occupied_evening == 0"; break;
+            default:break;
+        }
+
+        if (condition.isEmpty() && pavillon != 0)
+            condition += " WHERE ";
+        else if (!condition.isEmpty() && pavillon != 0)
+            condition += " AND ";
+
+        switch(pavillon)
+        {
+            case 1: condition += "local LIKE '%A-%'"; break;
+            case 2: condition += "local LIKE '%B-%'"; break;
+            case 3: condition += "local LIKE '%E-%'"; break;
+            default:break;
+        }
+
+        if (condition.isEmpty() && etage != 0)
+            condition += " WHERE ";
+        else if (!condition.isEmpty() && etage != 0)
+            condition += " AND ";
+
+        switch(etage)
+        {
+            case 1: condition += "local LIKE '%-0%'"; break;
+            case 2: condition += "local LIKE '%-1%'"; break;
+            case 3: condition += "local LIKE '%-2%'"; break;
+            case 4: condition += "local LIKE '%-3%'"; break;
+            case 5: condition += "local LIKE '%-4%'"; break;
+            default:break;
+        }
+
+        if (condition.isEmpty() && jourSemaine != 0)
+            condition += " WHERE ";
+        else if (!condition.isEmpty() && jourSemaine != 0)
+            condition += " AND ";
+
+        if (jourSemaine != 0)
+            condition += "jour == " + jourSemaine;
+
+        Cursor cursor = this.getReadableDatabase()
+                .rawQuery("SELECT * FROM " + TABLE_DISPOS + condition, null);
+
+        List<LocalOccupation> localOccupationList = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            LocalOccupation localOccupation = new LocalOccupation();
+
+            boolean occupiedMorning = cursor.getInt(cursor.getColumnIndex("occupied_morning")) == 1;
+            boolean occupiedAfternoon = cursor.getInt(cursor.getColumnIndex("occupied_afternoon")) == 1;
+            boolean occupiedEvening = cursor.getInt(cursor.getColumnIndex("occupied_evening")) == 1;
+            int dayOfWeek = cursor.getInt(cursor.getColumnIndex("jour"));
+            String local = cursor.getString(cursor.getColumnIndex("local"));
+
+            localOccupation.setMorning(occupiedMorning);
+            localOccupation.setAfternoon(occupiedAfternoon);
+            localOccupation.setEvening(occupiedEvening);
+            localOccupation.setDayOfWeek(dayOfWeek);
+            localOccupation.setLocal(local);
+
+            localOccupationList.add(localOccupation);
+        }
+
+        cursor.close();
+
+        return localOccupationList;
+    }
+
+    public List<LocalOccupation> getLocalOccupation() {
         Cursor cursor = this.getReadableDatabase()
                 .rawQuery("SELECT * FROM " + TABLE_DISPOS, null);
 
@@ -160,7 +245,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
         return localOccupationList;
     }
-
 
     public Observable<List<CoursHoraire>> syncDB() {
 
@@ -202,6 +286,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                     //Update Database with result from signets
                     truncateCoursesTable();
                     insertListeCours(coursHoraires);
+                    SharedPreferences sharedPref = context.getSharedPreferences(LAST_SYNC_DATE, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putLong(LAST_SYNC_DATE, new Date().getTime());
+                    editor.apply();
+
                 });
 
 

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">WhereWork</string>
+    <string name="sync">Synchronization…</string>
+    <string name="filtering_options">Filtering options</string>
+    <string name="search_btn_text">Search for free rooms</string>
+    <string name="day_filtering_option">Day</string>
+    <string name="time_filtering_option">Time</string>
+    <string name="building_filtering_option">Building</string>
+    <string name="floor_filtering_option">Floor</string>
+    <string name="sync_conf">Last synchronization : %1$s days ago.\nProceed to synchronization?</string>
+    <string name="wifi_required">An Internet connection is required for the first synchronization</string>
+    <string name="connect">Connect to WIFI</string>
+    <string name="quit">Quit</string>
+    <string name="internet_required">An internet connection is required</string>
+</resources>
