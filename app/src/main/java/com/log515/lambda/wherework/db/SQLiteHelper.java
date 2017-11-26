@@ -34,7 +34,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String TABLE_COURS = "salles_cours_session";
     public static final String TABLE_DISPOS = "avail_salles_cours";
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
 
     public SQLiteHelper(Context context) {
@@ -107,7 +107,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO " + TABLE_DISPOS + " " +
                 "SELECT " +
                 " t2.local as local, " +
-                " t2.jour as jour, " +
+                " CASE WHEN t2.jour = 0 THEN 7 ELSE t2.jour END as jour, " +
                 " MAX(t2.morning)   AS occupied_morning, " +
                 " MAX(t2.afternoon) AS occupied_afternoon, " +
                 " MAX(t2.evening)   AS occupied_evening " +
@@ -124,10 +124,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 "GROUP BY t2.local, t2.jour " +
                 "HAVING (MAX(t2.morning) + MAX(t2.afternoon) + MAX(t2.evening)) != 3 " +
                 " " +
-                "UNION SELECT DISTINCT s1.local, s2.jour, 0, 0, 0 " +
+                "UNION SELECT DISTINCT s1.local, CASE WHEN s2.jour = 0 THEN 7 ELSE s2.jour END as jour, 0, 0, 0 " +
                 "FROM salles_cours_session s1, salles_cours_session s2 " +
                 "WHERE s1.local NOT LIKE '% %' " +
-                "EXCEPT SELECT local,jour,0,0,0 FROM salles_cours_session " +
+                "EXCEPT SELECT local, CASE WHEN jour = 0 THEN 7 ELSE jour END as jour,0,0,0 FROM salles_cours_session " +
                 ";");
     }
 

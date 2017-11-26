@@ -19,8 +19,8 @@ public class LocalOccupationComparator implements Comparator<LocalOccupation> {
         DateTime dateTime = new DateTime();
         int today = dateTime.dayOfWeek().get();
 
-        int jour1 = l1.getDayOfWeek() == 0 ? 7 : l1.getDayOfWeek();
-        int jour2 = l2.getDayOfWeek() == 0 ? 7 : l2.getDayOfWeek();
+        int jour1 = l1.getDayOfWeek();
+        int jour2 = l2.getDayOfWeek();
 
         int jour1Mod = ((jour1 - today) % 7 + 7) % 7;
         int jour2Mod = ((jour2 - today) % 7 + 7) % 7;
