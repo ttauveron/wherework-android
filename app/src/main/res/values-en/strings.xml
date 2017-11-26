@@ -7,4 +7,5 @@
     <string name="time_filtering_option">Time</string>
     <string name="building_filtering_option">Building</string>
     <string name="floor_filtering_option">Floor</string>
+    <string name="sync_conf">Last synchronization : %1$s days ago.\nProceed to synchronization?</string>
 </resources>

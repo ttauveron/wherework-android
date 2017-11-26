@@ -1,7 +1,10 @@
 package com.log515.lambda.wherework.ui.activities;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -23,11 +26,16 @@ import com.log515.lambda.wherework.ui.adapters.LocalOccupationAdapter;
 import com.log515.lambda.wherework.utils.LocalOccupationComparator;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+
 import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.log515.lambda.wherework.db.SQLiteHelper.LAST_SYNC_DATE;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -80,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         SQLiteHelper database = new SQLiteHelper(this);
 
         List<LocalOccupation> localOccupation = database.getLocalOccupation();
-        Collections.sort(localOccupation,new LocalOccupationComparator());
+        Collections.sort(localOccupation, new LocalOccupationComparator());
         LocalOccupationAdapter adapter = new LocalOccupationAdapter(this, R.layout.row_local, localOccupation);
 
         localOccupationListView.setAdapter(adapter);
@@ -90,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         searchBtn.setOnClickListener(v -> {
             int dayOfWeek = jourSpinner.getSelectedItemPosition();
             List<LocalOccupation> localOccupation1 = database.getLocalOccupation(tempsSpinner.getSelectedItemPosition(), pavillonSpinner.getSelectedItemPosition(), etageSpinner.getSelectedItemPosition(), dayOfWeek);
-            Collections.sort(localOccupation1,new LocalOccupationComparator());
+            Collections.sort(localOccupation1, new LocalOccupationComparator());
             adapter.clear();
             adapter.addAll(localOccupation1);
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -137,20 +145,41 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.sync_menu_item) {
-            SQLiteHelper database = new SQLiteHelper(this);
 
-            syncProgressBar.setVisibility(View.VISIBLE);
-            slidingUpPanelLayout.setVisibility(View.GONE);
-            item.setEnabled(false);
 
-            database.syncDB()
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(o -> {
-                        syncProgressBar.setVisibility(View.GONE);
-                        slidingUpPanelLayout.setVisibility(View.VISIBLE);
-                        item.setEnabled(true);
-                    });
+            SharedPreferences sharedPref = getSharedPreferences(LAST_SYNC_DATE, MODE_PRIVATE);
+            long lastSync = sharedPref.getLong(LAST_SYNC_DATE, 0);
+            DateTime lastSyncDateTime = new DateTime(lastSync);
+            int daysSinceLastSync = Days.daysBetween(lastSyncDateTime, new DateTime()).getDays();
+
+            new AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.sync))
+                    .setMessage(getString(R.string.sync_conf, ""+daysSinceLastSync))
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            SQLiteHelper database = new SQLiteHelper(MainActivity.this);
+
+                            syncProgressBar.setVisibility(View.VISIBLE);
+                            slidingUpPanelLayout.setVisibility(View.GONE);
+                            item.setEnabled(false);
+
+                            database.syncDB()
+                                    .subscribeOn(Schedulers.newThread())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(o -> {
+                                        syncProgressBar.setVisibility(View.GONE);
+                                        slidingUpPanelLayout.setVisibility(View.VISIBLE);
+                                        item.setEnabled(true);
+                                    });
+                        }
+
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .show();
+
+
             return true;
         } else
             return super.onOptionsItemSelected(item);

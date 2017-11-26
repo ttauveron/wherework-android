@@ -3,6 +3,7 @@ package com.log515.lambda.wherework.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -18,6 +19,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -28,17 +30,23 @@ import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class SQLiteHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "wherework.db";
     public static final String TABLE_COURS = "salles_cours_session";
     public static final String TABLE_DISPOS = "avail_salles_cours";
 
+    public static final String LAST_SYNC_DATE = "last_sync_date";
+
     private static final int DATABASE_VERSION = 2;
+    private final Context context;
 
 
     public SQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
     @Override
@@ -278,6 +286,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                     //Update Database with result from signets
                     truncateCoursesTable();
                     insertListeCours(coursHoraires);
+                    SharedPreferences sharedPref = context.getSharedPreferences(LAST_SYNC_DATE, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putLong(LAST_SYNC_DATE, new Date().getTime());
+                    editor.apply();
+
                 });
 
 
