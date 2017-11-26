@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center_vertical"
     android:orientation="vertical"
     tools:context="com.log515.lambda.wherework.ui.activities.MainActivity">
 
@@ -13,7 +14,8 @@
         android:layout_height="match_parent"
         android:gravity="bottom"
         sothree:umanoPanelHeight="68dp"
-        sothree:umanoShadowHeight="4dp">
+        sothree:umanoShadowHeight="4dp"
+        tools:visibility="gone">
 
         <ListView
             android:id="@+id/listView_localoccupation"
@@ -117,5 +119,12 @@
         </RelativeLayout>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-
+    <ProgressBar
+        android:id="@+id/sync_progress_bar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:indeterminateOnly="true"
+        android:visibility="gone"
+        tools:visibility="visible" />
 </LinearLayout>

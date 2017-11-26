@@ -4,12 +4,16 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.log515.lambda.wherework.R;
@@ -22,6 +26,9 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -33,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner etageSpinner;
     private Spinner jourSpinner;
     private Button searchBtn;
+    private ProgressBar syncProgressBar;
     private Spinner.OnItemSelectedListener mBuildingItemSelected;
     private Spinner.OnItemSelectedListener mFloorItemSelected;
     private ArrayAdapter<CharSequence> AFloorAdapter;
@@ -58,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         searchBtn = findViewById(R.id.search_button);
         slidingUpPanelLayout = findViewById(R.id.sliding_layout);
         slidingUpPanelButton = findViewById(R.id.sliding_panel_btn);
+        syncProgressBar = findViewById(R.id.sync_progress_bar);
 
         createAdaptersAndEvents();
 
@@ -115,6 +124,36 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_activity_main, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.sync_menu_item) {
+            SQLiteHelper database = new SQLiteHelper(this);
+
+            syncProgressBar.setVisibility(View.VISIBLE);
+            slidingUpPanelLayout.setVisibility(View.GONE);
+            item.setEnabled(false);
+
+            database.syncDB()
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(o -> {
+                        syncProgressBar.setVisibility(View.GONE);
+                        slidingUpPanelLayout.setVisibility(View.VISIBLE);
+                        item.setEnabled(true);
+                    });
+            return true;
+        } else
+            return super.onOptionsItemSelected(item);
     }
 
     private void createAdaptersAndEvents() {
