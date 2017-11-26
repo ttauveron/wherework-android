@@ -8,4 +8,7 @@
     <string name="building_filtering_option">Pavillon</string>
     <string name="floor_filtering_option">Étage</string>
     <string name="sync_conf">Dernière synchronisation : il y a %1$s jours.\nProcéder à la synchronisation?</string>
+    <string name="wifi_required">Une connexion Internet est requise lors de la première synchronisation</string>
+    <string name="connect">Se connecter au WIFI</string>
+    <string name="quit">Quitter</string>
 </resources>
