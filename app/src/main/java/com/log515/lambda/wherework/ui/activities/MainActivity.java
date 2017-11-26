@@ -1,8 +1,6 @@
 package com.log515.lambda.wherework.ui.activities;
 
 import android.app.DatePickerDialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,8 +8,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -23,12 +19,7 @@ import com.log515.lambda.wherework.ui.adapters.LocalOccupationAdapter;
 import com.log515.lambda.wherework.utils.LocalOccupationComparator;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,11 +28,11 @@ public class MainActivity extends AppCompatActivity {
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
 
-    private EditText dateEt;
     private Spinner tempsSpinner;
     private Spinner pavillonSpinner;
     private Spinner etageSpinner;
-    private Button serachBtn;
+    private Spinner jourSpinner;
+    private Button searchBtn;
     private Spinner.OnItemSelectedListener mBuildingItemSelected;
     private Spinner.OnItemSelectedListener mFloorItemSelected;
     private ArrayAdapter<CharSequence> AFloorAdapter;
@@ -60,18 +51,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        dateEt = findViewById(R.id.date_edit_text);
         tempsSpinner = findViewById(R.id.temps_spinner);
+        jourSpinner = findViewById(R.id.jour_spinner);
         pavillonSpinner = findViewById(R.id.SpBuilding);
         etageSpinner = findViewById(R.id.SpFloor);
-        serachBtn = findViewById(R.id.search_button);
+        searchBtn = findViewById(R.id.search_button);
         slidingUpPanelLayout = findViewById(R.id.sliding_layout);
         slidingUpPanelButton = findViewById(R.id.sliding_panel_btn);
 
         createAdaptersAndEvents();
-
-        DateFormat dateFormat = SimpleDateFormat.getDateInstance();
-        dateEt.setText(dateFormat.format(new Date()));
 
         pavillonSpinner.setOnItemSelectedListener(mBuildingItemSelected);
 
@@ -90,15 +78,8 @@ public class MainActivity extends AppCompatActivity {
 
         adapter.notifyDataSetChanged();
 
-        serachBtn.setOnClickListener(v -> {
-            Calendar c = Calendar.getInstance();
-            int dayOfWeek = 0;
-            try {
-                c.setTime(dateFormat.parse(dateEt.getText().toString()));
-                dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+        searchBtn.setOnClickListener(v -> {
+            int dayOfWeek = jourSpinner.getSelectedItemPosition();
             List<LocalOccupation> localOccupation1 = database.getLocalOccupation(tempsSpinner.getSelectedItemPosition(), pavillonSpinner.getSelectedItemPosition(), etageSpinner.getSelectedItemPosition(), dayOfWeek);
             Collections.sort(localOccupation1,new LocalOccupationComparator());
             adapter.clear();
@@ -122,21 +103,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void showDatePicker(View view) {
-        Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog dialog = new DatePickerDialog(
-                MainActivity.this,
-                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                mDateSetListener,
-                year, month, day);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
-    }
-
     public void toggleSlidingPanel(View view) {
         if (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -146,30 +112,40 @@ public class MainActivity extends AppCompatActivity {
 
     private void createAdaptersAndEvents() {
 
-        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                Calendar cal = Calendar.getInstance();
-                cal.set(year, month, day);
-                Date date = cal.getTime();
-                DateFormat dateFormat = SimpleDateFormat.getDateInstance();
-                String dateStr = dateFormat.format(date);
-                dateEt.setText(dateStr);
-            }
-        };
+        ArrayAdapter<CharSequence> pavillonAdapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.BuildingArray,
+                R.layout.spinner_item);
+        pavillonAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        pavillonSpinner.setAdapter(pavillonAdapter);
+
+        ArrayAdapter<CharSequence> tempsSpinnerAdapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.DayTimeArray,
+                R.layout.spinner_item);
+        tempsSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        tempsSpinner.setAdapter(tempsSpinnerAdapter);
+
+        ArrayAdapter<CharSequence> jourSpinnerAdapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.JourArray,
+                R.layout.spinner_item);
+        jourSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        jourSpinner.setAdapter(jourSpinnerAdapter);
 
         AFloorAdapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.AFloorArray,
-                android.R.layout.simple_spinner_item);
+                R.layout.spinner_item);
         BFloorAdapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.BFloorArray,
-                android.R.layout.simple_spinner_item);
+                R.layout.spinner_item);
         EFloorAdapter = ArrayAdapter.createFromResource(
                 this,
                 R.array.EFloorArray,
-                android.R.layout.simple_spinner_item);
+                R.layout.spinner_item);
+
 
         AFloorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         BFloorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

@@ -22,59 +22,60 @@
             android:textSize="24sp" />
 
         <RelativeLayout
+            android:background="@color/black"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp">
+            android:layout_height="wrap_content">
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/header"
+
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_height="68dp">
 
                 <TextView
                     android:id="@+id/LbSchoolName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_alignParentStart="true"
                     android:gravity="center_vertical"
-                    android:text="Trouvez une salle libre"
+                    android:paddingStart="20dp"
+                    android:textColor="#FFFFFF"
+                    android:layout_centerVertical="true"
+                    android:text="Options de recherche"
                     android:textSize="24sp" />
 
                 <ImageButton
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
                     android:id="@+id/sliding_panel_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@null"
+                    android:tint="#FFFFFF"
+                    android:paddingEnd="15dp"
                     android:onClick="toggleSlidingPanel"
                     android:src="@drawable/ic_keyboard_arrow_up_black_24dp" />
-            </LinearLayout>
+            </RelativeLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/date_text_input_layout"
+            <fr.ganfra.materialspinner.MaterialSpinner
+                android:id="@+id/jour_spinner"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/header"
-                android:hint="Date">
-
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/date_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:onClick="showDatePicker"
-                    tools:text="10/11/2017" />
-            </android.support.design.widget.TextInputLayout>
+                android:entries="@array/JourArray"
+                app:ms_hint="Journée"
+                app:ms_baseColor="@color/red_ets"
+                app:ms_hintColor="#bfbfbf" />
 
             <fr.ganfra.materialspinner.MaterialSpinner
                 android:id="@+id/temps_spinner"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/date_text_input_layout"
+                android:layout_below="@id/jour_spinner"
                 android:entries="@array/DayTimeArray"
                 app:ms_hint="Temps"
-                app:ms_hintColor="?android:textColorHint" />
+                app:ms_baseColor="@color/red_ets"
+                app:ms_hintColor="#bfbfbf" />
 
             <LinearLayout
                 android:id="@+id/location_layout"
@@ -89,9 +90,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
                     android:layout_weight="0.5"
+                    app:ms_hintColor="#bfbfbf"
+                    app:ms_baseColor="@color/red_ets"
                     android:entries="@array/BuildingArray"
                     app:ms_hint="Pavillon"
-                    app:ms_hintColor="?android:textColorHint" />
+                    />
 
                 <fr.ganfra.materialspinner.MaterialSpinner
                     android:id="@+id/SpFloor"
@@ -101,7 +104,8 @@
                     android:layout_weight="0.5"
                     android:entries="@array/AFloorArray"
                     app:ms_hint="Étage"
-                    app:ms_hintColor="?android:textColorHint" />
+                    app:ms_hintColor="#bfbfbf"
+                    app:ms_baseColor="@color/red_ets" />
             </LinearLayout>
 
             <Button

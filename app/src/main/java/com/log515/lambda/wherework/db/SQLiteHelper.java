@@ -179,7 +179,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             condition += " AND ";
 
         if (jourSemaine != 0)
-            condition += "jour == " + (jourSemaine - 1);
+            condition += "jour == " + jourSemaine;
 
         Cursor cursor = this.getReadableDatabase()
                 .rawQuery("SELECT * FROM " + TABLE_DISPOS + condition, null);
