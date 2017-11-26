@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -81,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
         slidingUpPanelLayout = findViewById(R.id.sliding_layout);
         slidingUpPanelButton = findViewById(R.id.sliding_panel_btn);
         syncProgressBar = findViewById(R.id.sync_progress_bar);
+
+        searchBtn.getBackground().setColorFilter(getResources().getColor(R.color.medium_gray), PorterDuff.Mode.MULTIPLY);
+        searchBtn.setTextColor(Color.BLACK);
 
         createAdaptersAndEvents();
 
