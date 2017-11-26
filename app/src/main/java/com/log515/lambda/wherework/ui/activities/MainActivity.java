@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
             Collections.sort(localOccupation1,new LocalOccupationComparator());
             adapter.clear();
             adapter.addAll(localOccupation1);
+            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         });
 
         slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -108,6 +109,12 @@ public class MainActivity extends AppCompatActivity {
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         else
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED)
+            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
     }
 
     private void createAdaptersAndEvents() {
