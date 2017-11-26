@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">WhereWork</string>
+    <string name="sync">Synchronisation…</string>
+    <string name="filtering_options">Options de filtrage</string>
+    <string name="search_btn_text">Chercher des salles libres</string>
+    <string name="day_filtering_option">Jour</string>
+    <string name="time_filtering_option">Temps</string>
+    <string name="building_filtering_option">Pavillon</string>
+    <string name="floor_filtering_option">Étage</string>
 </resources>

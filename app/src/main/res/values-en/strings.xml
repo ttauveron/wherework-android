@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">WhereWork</string>
+    <string name="sync">Synchronization…</string>
+    <string name="filtering_options">Filtering options</string>
+    <string name="search_btn_text">Search for free rooms</string>
+    <string name="day_filtering_option">Day</string>
+    <string name="time_filtering_option">Time</string>
+    <string name="building_filtering_option">Building</string>
+    <string name="floor_filtering_option">Floor</string>
+</resources>

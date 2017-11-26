@@ -22,9 +22,9 @@
             android:textSize="24sp" />
 
         <RelativeLayout
-            android:background="@color/black"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/black">
 
             <RelativeLayout
                 android:id="@+id/header"
@@ -37,24 +37,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
                     android:gravity="center_vertical"
                     android:paddingStart="20dp"
+                    android:text="@string/filtering_options"
                     android:textColor="#FFFFFF"
-                    android:layout_centerVertical="true"
-                    android:text="Options de recherche"
                     android:textSize="24sp" />
 
                 <ImageButton
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true"
                     android:id="@+id/sliding_panel_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:background="@null"
-                    android:tint="#FFFFFF"
-                    android:paddingEnd="15dp"
                     android:onClick="toggleSlidingPanel"
-                    android:src="@drawable/ic_keyboard_arrow_up_black_24dp" />
+                    android:paddingEnd="15dp"
+                    android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
+                    android:tint="#FFFFFF" />
             </RelativeLayout>
 
             <fr.ganfra.materialspinner.MaterialSpinner
@@ -63,8 +63,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/header"
                 android:entries="@array/JourArray"
-                app:ms_hint="Journée"
                 app:ms_baseColor="@color/red_ets"
+                app:ms_hint="@string/day_filtering_option"
                 app:ms_hintColor="#bfbfbf" />
 
             <fr.ganfra.materialspinner.MaterialSpinner
@@ -73,8 +73,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/jour_spinner"
                 android:entries="@array/DayTimeArray"
-                app:ms_hint="Temps"
                 app:ms_baseColor="@color/red_ets"
+                app:ms_hint="@string/time_filtering_option"
                 app:ms_hintColor="#bfbfbf" />
 
             <LinearLayout
@@ -90,11 +90,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
                     android:layout_weight="0.5"
-                    app:ms_hintColor="#bfbfbf"
-                    app:ms_baseColor="@color/red_ets"
                     android:entries="@array/BuildingArray"
-                    app:ms_hint="Pavillon"
-                    />
+                    app:ms_baseColor="@color/red_ets"
+                    app:ms_hint="@string/building_filtering_option"
+                    app:ms_hintColor="#bfbfbf" />
 
                 <fr.ganfra.materialspinner.MaterialSpinner
                     android:id="@+id/SpFloor"
@@ -103,9 +102,9 @@
                     android:layout_marginStart="5dp"
                     android:layout_weight="0.5"
                     android:entries="@array/AFloorArray"
-                    app:ms_hint="Étage"
-                    app:ms_hintColor="#bfbfbf"
-                    app:ms_baseColor="@color/red_ets" />
+                    app:ms_baseColor="@color/red_ets"
+                    app:ms_hint="@string/floor_filtering_option"
+                    app:ms_hintColor="#bfbfbf" />
             </LinearLayout>
 
             <Button
@@ -114,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/location_layout"
                 android:layout_marginTop="24dp"
-                android:text="Chercher une salle libre" />
+                android:text="@string/search_btn_text" />
         </RelativeLayout>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
