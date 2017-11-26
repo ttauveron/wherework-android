@@ -1,9 +1,14 @@
 package com.log515.lambda.wherework.ui.activities;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,6 +23,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.log515.lambda.wherework.R;
 import com.log515.lambda.wherework.db.SQLiteHelper;
@@ -142,10 +148,33 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public boolean isConnected(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobileInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        if ((wifiInfo != null && wifiInfo.isConnected()) || (mobileInfo != null && mobileInfo.isConnected())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.sync_menu_item) {
 
+            if(!isConnected(this)) {
+                Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
+                        getString(R.string.internet_required), Snackbar.LENGTH_LONG);
+
+                View view = snackbar.getView();
+                TextView tv = view.findViewById(android.support.design.R.id.snackbar_text);
+                tv.setTextColor(Color.WHITE);
+                view.setBackgroundColor(Color.RED);
+                snackbar.show();
+                return false;
+            }
 
             SharedPreferences sharedPref = getSharedPreferences(LAST_SYNC_DATE, MODE_PRIVATE);
             long lastSync = sharedPref.getLong(LAST_SYNC_DATE, 0);
