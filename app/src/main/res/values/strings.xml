@@ -12,4 +12,5 @@
     <string name="connect">Se connecter au WIFI</string>
     <string name="quit">Quitter</string>
     <string name="internet_required">Une connexion internet est requise</string>
+    <string name="no_result">Aucune salle n\'a été trouvée</string>
 </resources>

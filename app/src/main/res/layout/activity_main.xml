@@ -17,11 +17,25 @@
         sothree:umanoShadowHeight="4dp"
         tools:visibility="gone">
 
-        <ListView
-            android:id="@+id/listView_localoccupation"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:textSize="24sp" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@+id/listView_localoccupation"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/no_result"
+                android:visibility="gone" />
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"

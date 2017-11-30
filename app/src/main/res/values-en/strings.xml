@@ -12,4 +12,5 @@
     <string name="connect">Connect to WIFI</string>
     <string name="quit">Quit</string>
     <string name="internet_required">An internet connection is required</string>
+    <string name="no_result">No room was found</string>
 </resources>

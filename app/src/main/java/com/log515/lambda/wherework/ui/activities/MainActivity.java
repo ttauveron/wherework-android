@@ -1,6 +1,5 @@
 package com.log515.lambda.wherework.ui.activities;
 
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -47,8 +46,6 @@ import static com.log515.lambda.wherework.db.SQLiteHelper.LAST_SYNC_DATE;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-
-    private DatePickerDialog.OnDateSetListener mDateSetListener;
 
     private Spinner tempsSpinner;
     private Spinner pavillonSpinner;
@@ -101,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
         Collections.sort(localOccupation, new LocalOccupationComparator());
         LocalOccupationAdapter adapter = new LocalOccupationAdapter(this, R.layout.row_local, localOccupation);
 
+        localOccupationListView.setEmptyView(findViewById(R.id.empty_view));
         localOccupationListView.setAdapter(adapter);
 
         adapter.notifyDataSetChanged();
